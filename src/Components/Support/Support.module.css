@@ -1,0 +1,21 @@
+.user {
+    background-colorcolor: darkgreen;
+    padding: 10px;
+}
+
+.userimg {
+    height: 55px;
+    width: 55px;
+}
+.userbuttonA{
+    color: green;
+    background-color: #241e3b;
+}
+.userbuttonD{
+    color: red;
+    background-color: #241e3b;
+}
+
+.activePage{
+    font-weight: bold;
+}

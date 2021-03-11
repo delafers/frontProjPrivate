@@ -1,0 +1,10 @@
+.end {
+    grid-area: e;
+    background-color: #241e3b;
+    color: aqua;
+}
+
+.end img {
+    width: 20px;
+    height: 20px;
+}

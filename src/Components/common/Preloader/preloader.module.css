@@ -1,0 +1,8 @@
+.preloader {
+    margin: auto;
+}
+.preloader img {
+    padding: 50px;
+    width: 400px;
+    height: 400px;
+}

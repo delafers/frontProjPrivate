@@ -1,0 +1,13 @@
+.columngal {
+    column-count: 1;
+    column-gap: 10px;
+    column-rule-width: 200px;
+    column-span: all;
+    padding: 4px;
+    background-color: #16141c;
+}
+.columngal img{
+    width: 33%;
+    height: 400px;
+    border: 1px solid black;
+}

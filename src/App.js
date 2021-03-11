@@ -1,24 +1,30 @@
-import logo from './logo.svg';
 import './App.css';
-
-function App() {
+import Nav from "./Components/NavBar/NavBar";
+import Main from "./Components/Main/Main/Main";
+import Profile from "./Components/Profile/Profile";
+import React from "react";
+import End from "./Components/End/End";
+import {Route, BrowserRouter} from "react-router-dom";
+import Packs from "./Components/Packs/Packs";
+import GalleryContainer from "./Components/Gallery/GalleryContainer";
+import SupportContainer from "./Components/Support/SupportContainer";
+import HeaderContainer from "./Components/Header/HeaderContainer";
+const App = (props) => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+          <div className='app-wrapper'>
+              <HeaderContainer/>
+              <Nav/>
+              <div className='app-wrapper-content'>
+                 <Route exact path='/' render={() => <Main /> } />
+                 <Route path='/profile' component={Profile} />
+                 <Route path='/packs' render={() => <Packs /> } />
+                 <Route path='/gallery/:userId?' render={() => <GalleryContainer />}/>
+                 <Route path='/Support' render={() => <SupportContainer/>}/>
+              </div>
+              <End/>
     </div>
+      </BrowserRouter>
   );
 }
 
