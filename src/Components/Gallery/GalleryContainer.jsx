@@ -3,6 +3,8 @@ import {AddImgToGallery, OnSrcPostChange, getUserProfile} from "../../Redux/Gale
 import Gallery from "./Gallery";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
+import {withAuthRedirect} from "../../hoc/withAuthRedirect";
+import {compose} from "redux";
 
 class galleryContainer extends React.Component{
     componentDidMount() {
@@ -25,10 +27,12 @@ let mapStateToProps = (state) => {
         GalleryPage: state.GalleryPage,
         BlockPost: state.GalleryPage.BlockPost,
         profile: state.GalleryPage.profile,
-        auth: state.auth.isAuth
     }
 }
 
-let WithRouterDataContainerComponent = withRouter(galleryContainer)
-const GalleryContainer = connect(mapStateToProps, {getUserProfile, OnSrcPostChange, AddImgToGallery})(WithRouterDataContainerComponent)
-export default GalleryContainer
+
+export default compose(
+    connect(mapStateToProps, {getUserProfile, OnSrcPostChange, AddImgToGallery}),
+    withRouter,
+    withAuthRedirect
+)(galleryContainer)

@@ -9,6 +9,7 @@ import Packs from "./Components/Packs/Packs";
 import GalleryContainer from "./Components/Gallery/GalleryContainer";
 import SupportContainer from "./Components/Support/SupportContainer";
 import HeaderContainer from "./Components/Header/HeaderContainer";
+import Login from "./Components/Login/Login";
 const App = (props) => {
   return (
       <BrowserRouter>
@@ -21,6 +22,7 @@ const App = (props) => {
                  <Route path='/packs' render={() => <Packs /> } />
                  <Route path='/gallery/:userId?' render={() => <GalleryContainer />}/>
                  <Route path='/Support' render={() => <SupportContainer/>}/>
+                 <Route path='/Login' render={() => <Login/>}/>
               </div>
               <End/>
     </div>

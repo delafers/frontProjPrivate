@@ -8,8 +8,10 @@ const Header = (props) => {
                 <a>
                     <img src='https://pngimg.com/uploads/photoshop/photoshop_PNG11.png' />
                 </a>
-                {props.isAuth ? props.login
-                    : <NavLink to='/profile' className={s.header}>Profile</NavLink>}
+
+                {props.isAuth
+                    ? <a>{props.login}  <button onClick={props.logout}>Log out</button></a>
+                    : <NavLink to='/login' className={s.header}>Profile</NavLink>}
             </header>
     );
 }

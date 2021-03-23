@@ -8,7 +8,8 @@ import {
 } from "../../Redux/support_reducer";
 import Chat from "./SupportAPIContainer";
 import Preloader from "../common/Preloader/preloader";
-import {usersAPI} from "../../api/api";
+import {compose} from "redux";
+import {withAuthRedirect} from "../../hoc/withAuthRedirect";
 
 
 
@@ -48,6 +49,9 @@ let mapStateToProps =(state) =>{
         followingInProgress: state.SupportPage.followingInProgress
     }
 }
-const SupportContainer = connect(mapStateToProps, {follow, unfollow, setCurrentPage, setTotalUsersCount,
-                                                    toggleFollowingProgress, getUsers})(ChatContainer)
-export default SupportContainer
+const SupportContainer = (ChatContainer)
+export default compose(
+    withAuthRedirect,
+    connect(mapStateToProps, {follow, unfollow, setCurrentPage, setTotalUsersCount,
+        toggleFollowingProgress, getUsers})
+)(ChatContainer)
