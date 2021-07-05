@@ -4,9 +4,9 @@ import {connect} from "react-redux";
 import {login, logout} from "../../Redux/auth_reducer";
 import {Redirect} from "react-router-dom";
 
-const LoginForm = (props) => {
+const LoginForm = ({handleSubmit}) => {
     return(
-        <form onSubmit={props.handleSubmit}>
+        <form onSubmit={handleSubmit}>
             <div>
                 <Field placeholder={"Login"} name={'login'} component={'input'}/>
             </div>
@@ -24,13 +24,13 @@ const LoginForm = (props) => {
 }
 const LoginReduxForm = reduxForm({form: 'login'})(LoginForm)
 
-const Login = (props) => {
+const Login = ({isAuth, login}) => {
     const onSubmit = (formData) => {
         debugger
         console.log(formData)
-        props.login(formData.login, formData.password, formData.rememberMe)
+        login(formData.login, formData.password, formData.rememberMe)
     }
-    if(props.isAuth) {
+    if(isAuth) {
         return <Redirect to={'/gallery'}/>
     }
     return<div>

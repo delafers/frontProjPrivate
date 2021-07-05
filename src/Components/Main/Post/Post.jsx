@@ -1,6 +1,8 @@
 import React from 'react'
 import s from './Post.module.css'
+import {maxLengthCreator, required} from "../../../utils/validators/validator";
 
+const maxLength25 = maxLengthCreator(25)
 
 const Post = (props) => {
 
@@ -19,18 +21,18 @@ const Post = (props) => {
                  <img src={props.sr}/>
             </p>
             <p>
-                <textarea></textarea>
+                <textarea validata={[required,maxLength25]}></textarea>
                 <button>comment</button>
             </p>
         </div>
 
     )
 }
-const Posts = (props) => {
 
-    let PostsElements = props.Top.map( post => <Post name={post.name} sr={post.sr} text={post.text}/>);
+const Posts = React.memo(props => {
+    console.log("POST")
+    let PostsElements = props.Top.map(post => <Post name={post.name} sr={post.sr} text={post.text}/>);
     let NewComment = React.createRef();
-
 
 
     let onPostChange = () => {
@@ -39,17 +41,19 @@ const Posts = (props) => {
     }
 
     let onAddComments = () => {
+        debugger
         props.addComments();
     }
-    return(
-        <div >
+    return (
+        <div>
             <p>
-                <textarea ref={NewComment} onChange={onPostChange} value={props.BlockPost}></textarea>
-                <button onClick={ onAddComments }>send comment</button>
+                <textarea ref={NewComment} onChange={onPostChange} value={props.BlockPost}
+                              validata={[required, maxLength25]}></textarea>
+                <button onClick={onAddComments}>send comment</button>
             </p>
             {PostsElements}
         </div>
     )
-}
+});
 
 export default Posts

@@ -2,7 +2,11 @@ import React from 'react';
 import s from './Gallery.module.css'
 import Preloader from "../common/Preloader/preloader";
 import {Redirect} from "react-router-dom";
+import {maxLengthCreator, required} from "../../utils/validators/validator";
+import ProfileStatus from "./ProfileStatus";
+import ProfileStatusHook from "./ProfileStatusHook";
 
+const maxLength25 = maxLengthCreator(25)
 
 const Gallery = (props) => {
     let GalleryImg = props.GalleryPage.GalleryAccounts.map(p => <GalleryPost class={p.class} sr={p.name}/>)
@@ -18,8 +22,6 @@ const Gallery = (props) => {
     if (!props.profile) {
         return <Preloader />
     }
-    if (props.auth == false) return <Redirect to={'/login'}/>
-
     return(
         <div className={s.columngal}>
             <div>
@@ -33,10 +35,12 @@ const Gallery = (props) => {
                <img src={props.profile.photos.small}/>
                <img src={props.profile.photos.small}/>
             </div>
-
-
+            <ProfileStatusHook status={"Hello"}/>
             <p>
-                <textarea ref={NewPicture} onChange={onGalChange} value={props.BlockPost}>choose picture</textarea>
+                <textarea ref={NewPicture}
+                          onChange={onGalChange}
+                          value={props.BlockPost}
+                            validata={[required,maxLength25]}>choose picture</textarea>
                 <button onClick={addPicture} >add</button>
             </p>
             {GalleryImg}

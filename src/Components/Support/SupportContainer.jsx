@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from "react-redux";
 import {
-    follow, getUsers,
+    follow, requestUsers,
     setCurrentPage, setTotalUsersCount,
     toggleFollowingProgress,
     unfollow
@@ -10,6 +10,13 @@ import Chat from "./SupportAPIContainer";
 import Preloader from "../common/Preloader/preloader";
 import {compose} from "redux";
 import {withAuthRedirect} from "../../hoc/withAuthRedirect";
+import {
+    getCurrentPage,
+    getFollowingInProgress,
+    getIsFetching,
+    getPageSize, getUsers,
+    getUsersCount, getUsersSuper
+} from "../../Redux/user_selectors";
 
 
 
@@ -39,7 +46,7 @@ class ChatContainer extends React.Component {
     }
 }
 
-let mapStateToProps =(state) =>{
+/*let mapStateToProps =(state) =>{
     return {
         users: state.SupportPage.users,
         pageSize: state.SupportPage.pageSize,
@@ -48,10 +55,20 @@ let mapStateToProps =(state) =>{
         isFetching: state.SupportPage.isFetching,
         followingInProgress: state.SupportPage.followingInProgress
     }
+}*/
+let mapStateToProps =(state) =>{
+    return {
+        users: getUsersSuper(state),
+        pageSize: getPageSize(state),
+        totalUsersCount: getUsersCount(state),
+        currentPage: getCurrentPage(state),
+        isFetching: getIsFetching(state),
+        followingInProgress: getFollowingInProgress(state)
+    }
 }
 const SupportContainer = (ChatContainer)
 export default compose(
     withAuthRedirect,
     connect(mapStateToProps, {follow, unfollow, setCurrentPage, setTotalUsersCount,
-        toggleFollowingProgress, getUsers})
+        toggleFollowingProgress, getUsers: requestUsers})
 )(ChatContainer)

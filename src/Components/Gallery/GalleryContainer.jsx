@@ -10,7 +10,7 @@ class galleryContainer extends React.Component{
     componentDidMount() {
         let userId = this.props.match.params.userId;
         if (!userId) {
-            userId = 2; 
+            userId = 2;
         }
         this.props.getUserProfile(userId)
     }
