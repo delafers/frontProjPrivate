@@ -1,0 +1,6 @@
+.formSummaryError {
+    border: brown 2px solid;
+    padding-left: 10px;
+    background-color: #241e3b;
+    color: brown;
+}

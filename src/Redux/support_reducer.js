@@ -93,7 +93,6 @@ export const followUnfollowFlow = async (dispatch, userId, apiMethod, actionCrea
         dispatch(actionCreator(userId))
     }
     dispatch(toggleFollowingProgress(false, userId))
-
 }
 export const follow = (userId) => {
     return async (dispatch) => {

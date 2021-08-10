@@ -1,26 +1,31 @@
-import './App.css';
+import React, { Suspense } from 'react';import './App.css';
 import Nav from "./Components/NavBar/NavBar";
 import Main from "./Components/Main/Main/Main";
 import Profile from "./Components/Profile/Profile";
-import React from "react";
 import End from "./Components/End/End";
 import {Route, BrowserRouter} from "react-router-dom";
 import Packs from "./Components/Packs/Packs";
-import GalleryContainer from "./Components/Gallery/GalleryContainer";
-import SupportContainer from "./Components/Support/SupportContainer";
+//import GalleryContainer from "./Components/Gallery/GalleryContainer";
+//import SupportContainer from "./Components/Support/SupportContainer";
 import HeaderContain from "./Components/Header/HeaderContainer";
 import Login from "./Components/Login/Login";
-import {connect} from "react-redux";
+import {connect, Provider} from "react-redux";
 import {compose} from "redux";
 import {initializeApp} from "./Redux/app_reducer";
 import Preloader from "./Components/common/Preloader/preloader";
+import store from "./Redux/redux-store";
+import {withSuspense} from "./hoc/LazyFunctoin";
+
+const SupportContainer = React.lazy(() => import("./Components/Support/SupportContainer"))
+const GalleryContainer = React.lazy(() => import('./Components/Gallery/GalleryContainer'));
 
 class App extends React.Component {
     componentDidMount() {
         this.props.initializeApp()
     }
+
     render() {
-        if(!this.props.initialized){
+        if (!this.props.initialized) {
             return <Preloader/>
         }
         return (
@@ -29,11 +34,11 @@ class App extends React.Component {
                     <HeaderContain/>
                     <Nav/>
                     <div className='app-wrapper-content'>
-                        <Route exact path='/' render={() => <Main/>}/>
+                        <Route path='/main' render={() => <Main/>}/>
                         <Route path='/profile' component={Profile}/>
                         <Route path='/packs' render={() => <Packs/>}/>
-                        <Route path='/gallery/:userId?' render={() => <GalleryContainer/>}/>
-                        <Route path='/Support' render={() => <SupportContainer/>}/>
+                        <Route path='/gallery/:userId?' render={withSuspense(GalleryContainer)}                     />
+                        <Route path='/Support' render={withSuspense(SupportContainer)}/>
                         <Route path='/Login' render={() => <Login/>}/>
                     </div>
                     <End/>
@@ -42,9 +47,24 @@ class App extends React.Component {
         );
     }
 }
-const mapStateToProps = (state) =>({
-    initialized: state.app.initialized
-})
 
-export default compose(
-    connect(mapStateToProps,{initializeApp}))(App)
+const mapStateToProps = (state) =>(
+{initialized: state.app.initialized})
+
+let AppContainer = compose(
+connect(mapStateToProps,{initializeApp}))(App)
+
+const LastFrontApp = (props) =>
+{
+    return <BrowserRouter>
+        <Provider store={store}>
+            <AppContainer/>
+        </Provider>
+    </BrowserRouter>
+}
+
+export default LastFrontApp
+export
+{
+    AppContainer
+}

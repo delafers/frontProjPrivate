@@ -1,13 +1,14 @@
 import React from 'react'
 import s from './Post.module.css'
 import {maxLengthCreator, required} from "../../../utils/validators/validator";
+import {Field, reduxForm} from "redux-form";
+import {Textarea} from "../../common/FormsControls/FormsControls";
 
 const maxLength25 = maxLengthCreator(25)
 
 const Post = (props) => {
 
     return   (
-
         <div className={s.post}>
             <div className={s.prof}>
             {props.name}
@@ -20,40 +21,41 @@ const Post = (props) => {
             <p>
                  <img src={props.sr}/>
             </p>
+            <form>
             <p>
-                <textarea validata={[required,maxLength25]}></textarea>
+
                 <button>comment</button>
             </p>
+            </form>
         </div>
 
     )
 }
 
-const Posts = React.memo(props => {
-    console.log("POST")
-    let PostsElements = props.Top.map(post => <Post name={post.name} sr={post.sr} text={post.text}/>);
+const Posts = ({Top, onPostChang, addComments,BlockPost, handleSubmit })=> {
+    let PostsElements = Top.map(post => <Post name={post.name} sr={post.sr} text={post.text}/>);
     let NewComment = React.createRef();
 
 
     let onPostChange = () => {
         let comment = NewComment.current.value;
-        props.onPostChang(comment);
+        onPostChang(comment);
     }
 
-    let onAddComments = () => {
-        debugger
-        props.addComments();
+    let onAddComments = (formData) => {
+        addComments(formData.post);
     }
     return (
         <div>
             <p>
-                <textarea ref={NewComment} onChange={onPostChange} value={props.BlockPost}
-                              validata={[required, maxLength25]}></textarea>
-                <button onClick={onAddComments}>send comment</button>
+                <form onAddComments={handleSubmit}>
+                    <Field component={Textarea}  name={'post'} placeholder={"Text for post"} validata={[required, maxLength25]}/>
+                    <button >send comment</button>
+                </form>
             </p>
             {PostsElements}
         </div>
     )
-});
-
-export default Posts
+};
+const PostsReduxForm = reduxForm({form: 'mainPost'})(Posts)
+export default PostsReduxForm

@@ -3,10 +3,7 @@ import React from 'react'
 class ProfileStatus extends React.Component {
         state = {
             editMode: false,
-            name: "ass"
         }
-
-
     ActivateMode = () => {
         this.setState({
             editMode: true,
@@ -17,8 +14,6 @@ class ProfileStatus extends React.Component {
             editMode: false,
         })
     }
-
-
     render() {
         return (
             <div>
@@ -29,7 +24,7 @@ class ProfileStatus extends React.Component {
                 }
                 {this.state.editMode &&
                 <div>
-                    <input onBlur={this.DeactivateMode} autoFocus={true} value={this.props.status}></input>
+                    <input onBlur={this.DeactivateMode} autoFocus={true} value={this.state.status}></input>
                 </div>
                 }
             </div>

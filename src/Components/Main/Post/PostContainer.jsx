@@ -2,6 +2,7 @@ import React from 'react'
 import {addCommentsActioncreator, onPostChangeActCreator} from "../../../Redux/Main_reducer.js";
 import Posts from "./Post";
 import {connect} from "react-redux";
+import PostsReduxForm from "./Post";
 
 
 let mapStateToProps = (state) => {
@@ -18,10 +19,11 @@ let mapDispatchToProps = (dispatch) => {
         },
         addComments: () => {
             dispatch(addCommentsActioncreator())
-        }
+        },
     }
 }
 
 
-const PostsContainer = connect(mapStateToProps,mapDispatchToProps)(Posts);
+
+const PostsContainer = connect(mapStateToProps,mapDispatchToProps)(PostsReduxForm);
 export default PostsContainer

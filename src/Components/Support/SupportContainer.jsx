@@ -18,14 +18,10 @@ import {
     getUsersCount, getUsersSuper
 } from "../../Redux/user_selectors";
 
-
-
 class ChatContainer extends React.Component {
-
     componentDidMount() {
         this.props.getUsers(this.props.currentPage, this.props.pageSize)
     }
-
 
     onPageChanged = (pageNumber) => {
       this.props.getUsers(pageNumber, this.props.pageSize)
@@ -45,18 +41,7 @@ class ChatContainer extends React.Component {
         </>
     }
 }
-
-/*let mapStateToProps =(state) =>{
-    return {
-        users: state.SupportPage.users,
-        pageSize: state.SupportPage.pageSize,
-        totalUsersCount: state.SupportPage.totalUsersCount,
-        currentPage: state.SupportPage.currentPage,
-        isFetching: state.SupportPage.isFetching,
-        followingInProgress: state.SupportPage.followingInProgress
-    }
-}*/
-let mapStateToProps =(state) =>{
+const mapStateToProps =(state) =>{
     return {
         users: getUsersSuper(state),
         pageSize: getPageSize(state),

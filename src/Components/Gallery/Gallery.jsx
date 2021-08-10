@@ -1,14 +1,17 @@
-import React from 'react';
+import React, {useState} from 'react';
 import s from './Gallery.module.css'
 import Preloader from "../common/Preloader/preloader";
 import {Redirect} from "react-router-dom";
 import {maxLengthCreator, required} from "../../utils/validators/validator";
-import ProfileStatus from "./ProfileStatus";
 import ProfileStatusHook from "./ProfileStatusHook";
+import userPhoto from "../../assets/images/User_Avatar.png"
+import ProfileDataFormField from "./ProfileDataForms";
 
 const maxLength25 = maxLengthCreator(25)
 
 const Gallery = (props) => {
+
+    let [editMode, setEditMode] = useState(false)
     let GalleryImg = props.GalleryPage.GalleryAccounts.map(p => <GalleryPost class={p.class} sr={p.name}/>)
     let NewPicture = React.createRef();
 
@@ -22,30 +25,83 @@ const Gallery = (props) => {
     if (!props.profile) {
         return <Preloader />
     }
+
+    const onSubmit = (formData) => {
+        props.saveProfile(formData).then(
+            () => {
+                setEditMode(false)
+            }
+        )
+    }
     return(
         <div className={s.columngal}>
             <div>
-                {props.profile.aboutMe}
+                {editMode ? <ProfileDataFormField initialValues={props.profile}{...props} onSubmit={onSubmit}/> :
+                    <ProfileData goToEditMode={() => {setEditMode(true)}}  {...props}/>}
             </div>
             <div>
-                {props.profile.lookingForAJobDescription}
-            </div>
-            <div>
-               <img src={props.profile.photos.small}/>
-               <img src={props.profile.photos.small}/>
-               <img src={props.profile.photos.small}/>
-            </div>
-            <ProfileStatusHook status={"Hello"}/>
-            <p>
                 <textarea ref={NewPicture}
                           onChange={onGalChange}
                           value={props.BlockPost}
-                            validata={[required,maxLength25]}>choose picture</textarea>
+                          validata={[required,maxLength25]}>choose picture</textarea>
                 <button onClick={addPicture} >add</button>
-            </p>
+            </div>
             {GalleryImg}
         </div>
     )
+}
+const ProfileData = (props) => {
+
+    const onMainPhotoSelected = (e) => {
+        if(e.target.files.length){
+            props.savePhoto(e.target.files[0])
+        }
+    }
+    return(
+        <div className={s.columngal}>
+            {props.isOwner && <div><button onClick={props.goToEditMode}>Edit</button></div>}
+            <div>
+                <img src={props.profile.photos.large || userPhoto}/>
+                {props.isOwner && <input type={"file"} onChange={onMainPhotoSelected}/>}
+            </div>
+            <div className={s.title}>
+                <b>Full name</b>: {props.profile.fullName}
+            </div>
+            <div className={s.title}>
+                <b>Looking for job </b>: {props.profile.lookingForAJob ? "yes" : "no"}
+            </div>
+            <div>
+                {props.profile.lookingForAJob &&
+                <div className={s.title}>
+                    <b>
+                        My skills:
+                    </b>
+                    {props.profile.lookingForAJobDescription}
+                </div>
+                }
+            </div>
+            <div className={s.title}>
+                <b>About me </b>: {props.profile.aboutMe}
+            </div>
+            <ProfileStatusHook status={"Hello"}/>
+            <div className={s.title}>
+                <b>Contacts</b>: {Object.keys(props.profile.contacts).map(
+                key =>{
+                    return <Contacts contactTitle={key} key={key}
+                                     contactValue={props.profile.contacts[key]}/>
+                }
+            )}
+            </div>
+        </div>
+    )
+
+}
+
+
+const Contacts = ({contactTitle,contactValue}) => {
+    return<div className={s.title}>
+        <b>{contactTitle}</b>: {contactValue}
+    </div>
 }
 
 const GalleryPost = (props) => {

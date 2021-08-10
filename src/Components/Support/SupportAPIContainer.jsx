@@ -6,11 +6,9 @@ import User from "./OneUser";
 let Chat = ({currentPage,onPageChanged, totalUsersCount,pageSize,followingInProgress,users,unfollow,follow,...props}) => {
 
     return <div>
-
         <Paginator currentPage={currentPage} onPageChanged={onPageChanged}
-                   totalUsersCount={totalUsersCount} pageSize={pageSize}/>
+                   totalItemsCount={totalUsersCount} pageSize={pageSize}/>
         <div>
-
         {
             users.map(u => <User key={u.id} user={u}
                                  followingInProgress={followingInProgress} unfollow={unfollow}
