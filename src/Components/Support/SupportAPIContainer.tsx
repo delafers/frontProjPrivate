@@ -1,9 +1,21 @@
 import React, {useState} from 'react'
-
 import Paginator from "../common/Paginator/Paginator";
 import User from "./OneUser";
+import {UserType} from "../../types/types";
 
-let Chat = ({currentPage,onPageChanged, totalUsersCount,pageSize,followingInProgress,users,unfollow,follow,...props}) => {
+type PropsType = {
+    totalUsersCount: number,
+    pageSize: number,
+    currentPage: number,
+    portionSize?: number,
+    users: Array<UserType>,
+    onPageChanged: (pageNumber: number) => void
+    followingInProgress: Array<number>
+    follow: (userId: number) => void
+    unfollow: (userId: number) => void
+}
+
+const Chat:React.FC<PropsType> = ({currentPage, onPageChanged, totalUsersCount,pageSize,followingInProgress,users,unfollow,follow,...props}) => {
 
     return <div>
         <Paginator currentPage={currentPage} onPageChanged={onPageChanged}

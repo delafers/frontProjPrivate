@@ -1,4 +1,4 @@
-import mainReducer from "./Main_reducer.js";
+import mainReducer from "./Main_reducer.ts";
 import GalleryReducer from "./Galerey_reducer";
 
 

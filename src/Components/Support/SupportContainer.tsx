@@ -2,8 +2,6 @@ import React from 'react';
 import {connect} from "react-redux";
 import {
     follow, requestUsers,
-    setCurrentPage, setTotalUsersCount,
-    toggleFollowingProgress,
     unfollow
 } from "../../Redux/support_reducer";
 import Chat from "./SupportAPIContainer";
@@ -17,13 +15,34 @@ import {
     getPageSize, getUsers,
     getUsersCount, getUsersSuper
 } from "../../Redux/user_selectors";
+import {UserType} from "../../types/types";
+import {AppStateType} from "../../Redux/redux-store";
 
-class ChatContainer extends React.Component {
+type MapStatePropsType = {
+    currentPage: number,
+    pageSize: number,
+    isFetching: boolean
+    totalUsersCount: number
+    users: Array<UserType>
+    followingInProgress: Array<number>
+}
+
+type MapDispatchPropsType = {
+    getUsers: (currentPage: number, pageSize: number) => void,
+    follow: (userId: number) => void
+    unfollow: (userId: number) => void
+}
+type OwnPropsType = {
+
+}
+type PropsType = MapStatePropsType & MapDispatchPropsType & OwnPropsType
+class ChatContainer extends React.Component<PropsType> {
     componentDidMount() {
+        debugger
         this.props.getUsers(this.props.currentPage, this.props.pageSize)
     }
 
-    onPageChanged = (pageNumber) => {
+    onPageChanged = (pageNumber: number) => {
       this.props.getUsers(pageNumber, this.props.pageSize)
     }
     render() {
@@ -41,7 +60,8 @@ class ChatContainer extends React.Component {
         </>
     }
 }
-const mapStateToProps =(state) =>{
+const mapStateToProps =(state: AppStateType):MapStatePropsType =>{
+    debugger
     return {
         users: getUsersSuper(state),
         pageSize: getPageSize(state),
@@ -54,6 +74,6 @@ const mapStateToProps =(state) =>{
 const SupportContainer = (ChatContainer)
 export default compose(
     withAuthRedirect,
-    connect(mapStateToProps, {follow, unfollow, setCurrentPage, setTotalUsersCount,
-        toggleFollowingProgress, getUsers: requestUsers})
-)(ChatContainer)
+    connect<MapStatePropsType, MapDispatchPropsType, OwnPropsType, AppStateType>(mapStateToProps,
+        {follow, unfollow, getUsers: requestUsers})
+)(ChatContainer) as React.ComponentType

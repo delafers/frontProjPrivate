@@ -9,13 +9,13 @@ const Nav = () => {
                 <NavLink to='/profile' activeClassName={s.active}>Profile</NavLink>
             </div>
             <div className={s.item}>
-                <NavLink to='/main' activeClassName={s.active}>Main</NavLink>
+                <NavLink to='/' activeClassName={s.active}>Main</NavLink>
             </div>
             <div className={s.item}>
                 <NavLink to='/packs' activeClassName={s.active}>Packs</NavLink>
             </div>
             <div className={s.item}>
-                <NavLink to='/support' activeClassName={s.active}>support(Test)</NavLink>
+                <NavLink to='/users' activeClassName={s.active}>Users</NavLink>
             </div>
             <div className={s.item}>
                 <NavLink to='/gallery' activeClassName={s.active}>Gallery</NavLink>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import s from './Gallery.module.css'
 import Preloader from "../common/Preloader/preloader";
 import {Redirect} from "react-router-dom";
@@ -6,27 +6,42 @@ import {maxLengthCreator, required} from "../../utils/validators/validator";
 import ProfileStatusHook from "./ProfileStatusHook";
 import userPhoto from "../../assets/images/User_Avatar.png"
 import ProfileDataFormField from "./ProfileDataForms";
+import {setUserStatus} from "../../Redux/Galerey_reducer";
+import {ContactsType, ProfileType} from "../../types/types";
 
 const maxLength25 = maxLengthCreator(25)
-
-const Gallery = (props) => {
+type GalleryPropsType = {
+    GalleryPage:Array<any>,
+    updateImgURL: (comment: string) => void,
+    addPicture: () => void,
+    profile: ProfileType,
+    saveProfile:(profile:ProfileType) => Promise<any>,
+    BlockPost:string
+    isOwner: boolean
+    savePhoto: () => void
+    setUserStatus: () => void
+    getUserStatus?: () => void
+    goToEditMode?: () => void
+}
+const Gallery:React.FC<GalleryPropsType> = (props) => {
 
     let [editMode, setEditMode] = useState(false)
-    let GalleryImg = props.GalleryPage.GalleryAccounts.map(p => <GalleryPost class={p.class} sr={p.name}/>)
+    let GalleryImg = props.GalleryPage.map(p => <GalleryPost class={p.class} sr={p.name}/>)
     let NewPicture = React.createRef();
 
     let onGalChange = () => {
+        // @ts-ignore
         let comment = NewPicture.current.value;
         props.updateImgURL(comment);
     }
     let addPicture = () => {
         props.addPicture();
     }
-    if (!props.profile) {
+    if (props.profile) {
         return <Preloader />
     }
 
-    const onSubmit = (formData) => {
+    const onSubmit = (formData:ProfileType) => {
         props.saveProfile(formData).then(
             () => {
                 setEditMode(false)
@@ -36,24 +51,29 @@ const Gallery = (props) => {
     return(
         <div className={s.columngal}>
             <div>
-                {editMode ? <ProfileDataFormField initialValues={props.profile}{...props} onSubmit={onSubmit}/> :
-                    <ProfileData goToEditMode={() => {setEditMode(true)}}  {...props}/>}
+                {editMode ? <ProfileDataFormField  savePhoto={props.savePhoto} profile={props.profile}
+                                                   isOwner={props.isOwner} onSubmit={onSubmit} /> :
+                    <ProfileData goToEditMode={() => {setEditMode(true)}} savePhoto={props.savePhoto} isOwner={props.isOwner}
+                                 profile={props.profile}   setUserStatus={props.setUserStatus} />}
             </div>
             <div>
-                <textarea ref={NewPicture}
-                          onChange={onGalChange}
-                          value={props.BlockPost}
-                          validata={[required,maxLength25]}>choose picture</textarea>
+                <textarea >choose picture</textarea>
                 <button onClick={addPicture} >add</button>
             </div>
             {GalleryImg}
         </div>
     )
 }
-const ProfileData = (props) => {
-
-    const onMainPhotoSelected = (e) => {
-        if(e.target.files.length){
+type ProfileDataProps = {
+    savePhoto: (file: File) => void,
+    isOwner: boolean,
+    profile:ProfileType
+    setUserStatus: () => void
+    goToEditMode: () => void
+}
+const ProfileData:React.FC<ProfileDataProps> = (props) => {
+    const onMainPhotoSelected = (e:ChangeEvent<HTMLInputElement>) => {
+        if(e.target.files?.length){
             props.savePhoto(e.target.files[0])
         }
     }
@@ -83,12 +103,12 @@ const ProfileData = (props) => {
             <div className={s.title}>
                 <b>About me </b>: {props.profile.aboutMe}
             </div>
-            <ProfileStatusHook status={"Hello"}/>
+            <ProfileStatusHook setUserStatus={props.setUserStatus} status={"Hello"}/>
             <div className={s.title}>
                 <b>Contacts</b>: {Object.keys(props.profile.contacts).map(
                 key =>{
                     return <Contacts contactTitle={key} key={key}
-                                     contactValue={props.profile.contacts[key]}/>
+                                     contactValue={props.profile?.contacts[key as keyof ContactsType]}/>
                 }
             )}
             </div>
@@ -97,14 +117,20 @@ const ProfileData = (props) => {
 
 }
 
-
-const Contacts = ({contactTitle,contactValue}) => {
+type Contacts = {
+    contactTitle: string,
+    contactValue: string
+}
+const Contacts:React.FC<Contacts> = ({contactTitle,contactValue}) => {
     return<div className={s.title}>
         <b>{contactTitle}</b>: {contactValue}
     </div>
 }
-
-const GalleryPost = (props) => {
+type GalleryPostProps = {
+    sr:string
+    class: string
+}
+const GalleryPost:React.FC<GalleryPostProps> = (props) => {
     return(
         <div className={s.columngal}>
             <div>

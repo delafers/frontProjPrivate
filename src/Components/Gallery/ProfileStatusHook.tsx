@@ -1,23 +1,27 @@
-import React, {useEffect, useState} from 'react'
+import React, {ChangeEvent, useEffect, useState} from 'react'
 import s from "./Gallery.module.css";
+type propsType = {
+    status:string
+    setUserStatus?: (status: string) => void
+}
 
-const ProfileStatusHook = (props) => {
-
+const ProfileStatusHook: React.FC<propsType> = (props) => {
     let [editMode, setEditMode] = useState(false)
     let [status, setStatus] = useState(props.status)
-
+    debugger
     useEffect(() => {
         setStatus(props.status)
+        debugger
     },[props.status])
 
     const  ActivateMode = () => {
-        debugger
         setEditMode(true)
     }
     const  DeactivateMode = () => {
+        //props.setUserStatus(status)
         setEditMode(false)
     }
-    const onStatusChange = (e) => {
+    const onStatusChange = (e:ChangeEvent<HTMLInputElement>) => {
         setStatus(e.currentTarget.value)
     }
     return (
