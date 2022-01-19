@@ -29,6 +29,7 @@ export type UserType = {
     id: number,
     name: string,
     status: string,
+    followed?:boolean,
     photos: PhotosType
 }
 export type PropsType = {

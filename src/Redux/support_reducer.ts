@@ -24,6 +24,7 @@ const supportReducer = (state = initialState, action: ActionTypes): InitialState
                 users: updateObjectInArray(state.users, action.userId, "id", {followed: true})
             }
         case "UNFOLLOW":
+            debugger
             return {
                 ...state,
                 users: updateObjectInArray(state.users, action.userId, "id", {followed: false})
@@ -65,15 +66,15 @@ const supportReducer = (state = initialState, action: ActionTypes): InitialState
 
 
 export const actions = {
-    followSuccess : (userId: number) => ({type: "FOLLOW", userId} as const),
-    unfollowSuccess : (userId: number) => ({type: "UNFOLLOW", userId} as const),
+    followSuccess: (userId: number) => ({type: "FOLLOW", userId} as const),
+    unfollowSuccess: (userId: number) => ({type: "UNFOLLOW", userId} as const),
     setUsers: (users: Array<UserType>) => ({type: "SET_USERS", users} as const),
     setCurrentPage: (currentPage: number) => ({type: "SET_CURRENT_PAGE", currentPage} as const),
     setTotalUsersCount: (totalCount: number) => ({
         type: "SET_TOTAL_USERS_COUNT",
         count: totalCount
-    }as const),
-    toggleIsFetching : (isFetching: boolean) => ({type: "TOGGLE_IS_FETCHING", isFetching} as const),
+    } as const),
+    toggleIsFetching: (isFetching: boolean) => ({type: "TOGGLE_IS_FETCHING", isFetching} as const),
     toggleFollowingProgress: (userId: number) => ({
         type: "TOGGLE_IS_FOLLOWING_PROGRESS",
         userId,
@@ -99,22 +100,27 @@ export const requestUsers = (page: number, pageSize: number): ThunkType => {
     }
 }
 export const _followUnfollowFlow = async (dispatch: DispatchType, userId: number, apiMethod: any,
-                                          actionCreator: (userId: number) => ActionTypes ) => {
+                                          actionCreator: (userId: number) => ActionTypes) => {
     dispatch(actions.toggleIsFetching(true))
     let response = await apiMethod(userId)
-    if (response.data.resultCode == 0) {
+    debugger
+    if (response.data?.resultCode == 0) {
+        dispatch(actionCreator(userId))
+    }
+    if (response?.resultCode == 0) {
         dispatch(actionCreator(userId))
     }
     dispatch(actions.toggleIsFetching(false))
 }
 export const follow = (userId: number): ThunkType => {
     return async (dispatch) => {
-        _followUnfollowFlow(dispatch, userId, usersAPI.follow.bind(usersAPI), actions.followSuccess)
+        await _followUnfollowFlow(dispatch, userId, usersAPI.follow.bind(usersAPI), actions.followSuccess)
     }
 }
 export const unfollow = (userId: number): ThunkType => {
     return async (dispatch) => {
-        _followUnfollowFlow(dispatch, userId, usersAPI.unfollow.bind(usersAPI), actions.unfollowSuccess)
+        debugger
+       await _followUnfollowFlow(dispatch, userId, usersAPI.unfollow.bind(usersAPI), actions.unfollowSuccess)
     }
 }
 
