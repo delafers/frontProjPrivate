@@ -1,6 +1,6 @@
 import React from 'react'
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
-import {connect} from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import {login, logout} from "../../Redux/auth_reducer";
 import {Redirect} from "react-router-dom";
 import {createField, GetStringKeys, Input} from "../common/FormsControls/FormsControls";
@@ -39,7 +39,7 @@ const LoginReduxForm = reduxForm<LoginFormTypes, OwnProps>({form: 'login'})(Logi
 
 
 type mapStateToPropsType = {
-    captchaUrl:string | null,
+    //captchaUrl:string | null,
     isAuth:boolean
 }
 type mapDispatchPropsType = {
@@ -54,9 +54,12 @@ export type LoginFormTypes = {
 export type LoginFormTypesKeys = GetStringKeys<LoginFormTypes>
 
 
-const Login:React.FC<mapStateToPropsType & mapDispatchPropsType> = ({isAuth, login, captchaUrl}) => {
+export const LoginPage = () => {
+    const captchaUrl = useSelector((state: AppStateType) => state.auth.captchaUrl)
+    const isAuth = useSelector((state: AppStateType) => state.auth.isAuth)
+    const dispatch = useDispatch()
     const onSubmit = (formData:LoginFormTypes) => {
-        login(formData.login, formData.password, formData.rememberMe, formData.captcha)
+        dispatch(login(formData.login, formData.password, formData.rememberMe, formData.captcha))
     }
     if(isAuth) {
         return <Redirect to={'/gallery'}/>
@@ -66,8 +69,4 @@ const Login:React.FC<mapStateToPropsType & mapDispatchPropsType> = ({isAuth, log
         <LoginReduxForm onSubmit={onSubmit} captchaUrl={captchaUrl}/>
     </div>
 }
-const mapStateToProps = (state: AppStateType):mapStateToPropsType => ({
-    isAuth:state.auth.isAuth,
-    captchaUrl:state.auth.captchaUrl
-})
-export default connect(mapStateToProps, {login}) (Login)
+

@@ -18,10 +18,10 @@ import {ProfileType} from "../../types/types";
 type MapStateProps = {
     GalleryPage: any,
     BlockPost: string,
-    profile: ProfileType,
-    authorizedUserId:number ,
+    profile: ProfileType | null,
+    authorizedUserId:number | null,
     isAuth:boolean ,
-    status: string,
+    status: string | null,
     actions: ActionsType
 
 }
@@ -43,11 +43,12 @@ type routeProps = {
 }
 export class galleryContainer extends React.Component<MapStateProps & DispatchPropsType  & RouteComponentProps<routeProps>> {
     refreshProfile() {
-        debugger
-        let userId:number | null = +this.props.match.params.userId;
+        let userId:number = +this.props.match.params.userId;
         if (!userId) {
+            // @ts-ignore
             userId = this.props.authorizedUserId;
         }
+        debugger
         this.props.getUserProfile(userId)
     }
 
@@ -60,20 +61,14 @@ export class galleryContainer extends React.Component<MapStateProps & DispatchPr
     render() {
         return<>
             <div>
-                fdg
+                <button onClick={() => {this.props.setUserStatus()}}>{this.props.profile?.aboutMe}</button>
             </div>
-            <Gallery GalleryPage={this.props.GalleryPage} BlockPost={this.props.BlockPost}
-                     updateImgURL={this.props.updateImgURL} getUserStatus={this.props.getUserStatus}
-                     setUserStatus={this.props.setUserStatus}  profile={this.props.GalleryPage.profile}
-                     isOwner={!this.props.match.params.userId} saveProfile={this.props.saveProfile}
-                     addPicture={this.props.addPicture}  savePhoto={this.props.savePhoto}
-            />
+
         </>
     }
 }
 
 let mapStateToProps = (state: AppStateType) => {
-    debugger
     return {
         GalleryPage: state.GalleryPage.GalleryAccounts,
         BlockPost: state.GalleryPage.BlockPost,
@@ -85,9 +80,10 @@ let mapStateToProps = (state: AppStateType) => {
 }
 
 
-let a = compose(
+// @ts-ignore
+export default compose(
     connect(mapStateToProps, { addPicture: actions.AddImgToGallery, getUserStatus,
         setUserProfile: actions.setUserProfile, setStatus:actions.setStatus, setUserStatus,
         getUserProfile, savePhoto}),
-    withRouter
-)(galleryContainer)
+    withRouter, withAuthRedirect
+)(galleryContainer)as React.ComponentType

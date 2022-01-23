@@ -85,15 +85,15 @@ const GalleryReducer = (state = initialState, action: ActionsType): InitialState
 //export const DeletePost = (postId: number) => ({type: DELETE_POST, postId})
 
 export const getUserProfile = (userId: number):ThunkTypes => async (dispatch) => {
-    let response = await usersAPI.galleryProfile(userId)
     debugger
+    let response = await usersAPI.galleryProfile(userId)
     dispatch(actions.setUserProfile(response.data))
 }
 
 export const savePhoto = (file: File):ThunkTypes => async (dispatch) => {
     let response = await profileAPI.savePhoto(file)
     // @ts-ignore
-    dispatch(savePhotoSuccess(response.data.photos))
+    dispatch(actions.savePhotoSuccess(response.data.photos))
 }
 
 export const saveProfile = (profile: ProfileType):ThunkTypes => async (dispatch, getState) => {
