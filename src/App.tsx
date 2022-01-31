@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import './App.css';
+import 'antd/dist/antd.css'
 import Nav from "./Components/NavBar/NavBar";
 import Main from "./Components/Main/Main/Main";
 import Profile from "./Components/Profile/Profile";
@@ -14,12 +15,12 @@ import {initializeApp} from "./Redux/app_reducer";
 import Preloader from "./Components/common/Preloader/preloader";
 import store, {AppStateType} from "./Redux/redux-store";
 import {withSuspense} from "./hoc/LazyFunctoin";
-import {galleryContainer} from "./Components/Gallery/GalleryContainer"
+import {GalleryPage} from "./Components/Gallery/GalleryContainer"
 import {UsersPage} from "./Components/Support/SupportContainer";
+import {Button} from "antd";
 
-const GalleryContainer = React.lazy(() => import('./Components/Gallery/GalleryContainer'))
 
-const SuspendedGallery = withSuspense(GalleryContainer)
+const SuspendedGallery = withSuspense(GalleryPage)
 
 type MapPropsType = ReturnType<typeof mapStateToProps>
 type DispatchPropsType = {
@@ -42,9 +43,10 @@ class App extends React.Component<MapPropsType & DispatchPropsType> {
                         <Route exact path='/' render={() => <Main/>}/>
                         <Route path='/profile' component={Profile}/>
                         <Route path='/packs' render={() => <Packs/>}/>
-                        <Route path='/gallery/:userId?'render={() => <SuspendedGallery/>}/>
+                        <Route path='/gallery/:userId?'render={() => <GalleryPage/>}/>
                         <Route path='/users' render={() => <UsersPage/>}/>
                         <Route path='/Login' render={() => <LoginPage/>}/>
+                        <Route path='*' render={() => <div><Button>ok</Button></div>}/>
                     </div>
                     <End/>
                 </div>

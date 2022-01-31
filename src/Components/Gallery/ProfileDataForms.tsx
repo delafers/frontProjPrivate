@@ -5,9 +5,10 @@ import s from "./Gallery.module.css";
 import {createField, Input, Textarea} from "../common/FormsControls/FormsControls";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {ProfileType} from "../../types/types";
+import {useSelector} from "react-redux";
+import {AppStateType} from "../../Redux/redux-store";
 
 type PropsForm = {
-    profile:ProfileType,
     isOwner: boolean,
     handleSubmit?: () => void,
     savePhoto: (file:File) => void,
@@ -25,10 +26,9 @@ type ProfileDataFormType = {
 }
 type KeysOfProfileData = Extract<keyof ProfileDataFormType, string>
 
-debugger
 
 const ProfileDataForm:React.FC<InjectedFormProps<ProfileDataFormType, PropsForm> & PropsForm> = (
-    {profile,isOwner,handleSubmit,savePhoto,
+    {isOwner,handleSubmit,savePhoto,
         error }) => {
 
     const onMainPhotoSelected = (e:ChangeEvent<HTMLInputElement>) => {
@@ -36,6 +36,9 @@ const ProfileDataForm:React.FC<InjectedFormProps<ProfileDataFormType, PropsForm>
             savePhoto(e.target.files[0])
         }
     }
+    const profile = useSelector((state: AppStateType) => state.GalleryPage.profile)
+
+    // @ts-ignore
     return(
         <form onSubmit={handleSubmit}>
             <div><button>Save changes</button></div>
@@ -43,7 +46,7 @@ const ProfileDataForm:React.FC<InjectedFormProps<ProfileDataFormType, PropsForm>
                 {error}
             </div>}
             <div>
-                <img src={profile.photos.large || userPhoto}/>
+                <img src={profile?.photos.large || userPhoto}/>
                 {isOwner && <input type={"file"} onChange={onMainPhotoSelected}/>}
             </div>
             <div className={s.title}>
@@ -68,7 +71,7 @@ const ProfileDataForm:React.FC<InjectedFormProps<ProfileDataFormType, PropsForm>
                 {createField<KeysOfProfileData>("About me", "aboutMe", [], Textarea)}
             </div>
             <div className={s.title}>
-                <b>Contacts</b>: {Object.keys(profile.contacts).map(
+                <b>Contacts</b>: {profile && Object.keys(profile?.contacts).map(
                 key =>{
                     return <div className={s.title} key={key}>
                             <b>

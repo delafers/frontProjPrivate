@@ -1,17 +1,18 @@
 import React, {ChangeEvent, useEffect, useState} from 'react'
 import s from "./Gallery.module.css";
+import {useDispatch} from "react-redux";
 type propsType = {
     status:string
-    setUserStatus?: (status: string) => void
 }
 
 const ProfileStatusHook: React.FC<propsType> = (props) => {
     let [editMode, setEditMode] = useState(false)
     let [status, setStatus] = useState(props.status)
-    debugger
+    const dispatch = useDispatch()
+    const setUserStatus = (status:string) => { dispatch(setUserStatus(status))}
+
     useEffect(() => {
         setStatus(props.status)
-        debugger
     },[props.status])
 
     const  ActivateMode = () => {

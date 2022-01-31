@@ -63,7 +63,6 @@ const GalleryReducer = (state = initialState, action: ActionsType): InitialState
             return stateCopy;
         }
         case SET_USER_PROFILE: {
-            debugger
             return {...state, profile: action.profile}
         }
         /*case DELETE_POST: {
@@ -85,7 +84,6 @@ const GalleryReducer = (state = initialState, action: ActionsType): InitialState
 //export const DeletePost = (postId: number) => ({type: DELETE_POST, postId})
 
 export const getUserProfile = (userId: number):ThunkTypes => async (dispatch) => {
-    debugger
     let response = await usersAPI.galleryProfile(userId)
     dispatch(actions.setUserProfile(response.data))
 }

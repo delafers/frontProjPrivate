@@ -13,6 +13,7 @@ import {
     getUsersFilter,
     getUsersSuper
 } from "../../Redux/user_selectors";
+import { useHistory } from 'react-router-dom';
 
 type PropsType = {
     }
@@ -25,11 +26,34 @@ export const Chat: React.FC<PropsType> = (props) => {
     const pageSize = useSelector(getPageSize)
     const filter = useSelector(getUsersFilter)
     const dispatch = useDispatch()
+    const queryString = require('query-string');
+    const history = useHistory()
 
     useEffect(() => {
-        dispatch(requestUsers(currentPage, pageSize, filter))
+        //const parsed = parse(history.location.search.substring(1))
+        debugger
+        const parsed = queryString.parse(history.location.search);
+        let actualPage = currentPage
+        let actualFilter = filter
+
+        if(parsed.page) actualPage = +parsed.page
+        if(parsed.term) actualFilter = {...actualFilter, term: parsed.term as string}
+        debugger
+        if(parsed.friend) actualFilter = {...actualFilter, friend: parsed.friend === "null" ? null : parsed.friend === "true" ? true : false}
+        dispatch(requestUsers(actualPage, pageSize, actualFilter))
 
     }, [])
+
+    useEffect(() => {
+        const query:any = {}
+        if(filter.term) query.term= filter.term
+        if(filter.friend !== null) query.friend = String(filter.friend)
+        if(currentPage !== 1) query.page = String(currentPage)
+        history.push({
+            pathname:"/users",
+            search: queryString.stringify(query)
+        })
+    }, [filter, currentPage])
 
     const onPageChanged = (pageNumber: number) => {
         dispatch(requestUsers(pageNumber, pageSize, filter))
