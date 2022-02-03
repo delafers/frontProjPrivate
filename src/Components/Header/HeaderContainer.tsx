@@ -3,6 +3,7 @@ import Header from "./Header";
 import {connect} from "react-redux";
 import {getUserAuthData, logout} from "../../Redux/auth_reducer";
 import {AppStateType} from "../../Redux/redux-store";
+import HeaderApp from "./Header";
 
 type MapStatePropsType = {
     isAuth:boolean;
@@ -18,7 +19,7 @@ class HeaderContain extends React.Component<MapStatePropsType & MapDispatchProps
     render() {
         // @ts-ignore
         return (
-            <Header isAuth={this.props.isAuth} login={this.props.login} logout={this.props.logout} />
+            <HeaderApp isAuth={this.props.isAuth} login={this.props.login} logout={this.props.logout} />
         );
     }
 }
