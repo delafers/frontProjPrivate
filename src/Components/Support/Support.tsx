@@ -31,17 +31,14 @@ export const Chat: React.FC<PropsType> = (props) => {
 
     useEffect(() => {
         //const parsed = parse(history.location.search.substring(1))
-        debugger
         const parsed = queryString.parse(history.location.search);
         let actualPage = currentPage
         let actualFilter = filter
-
         if(parsed.page) actualPage = +parsed.page
         if(parsed.term) actualFilter = {...actualFilter, term: parsed.term as string}
         debugger
         if(parsed.friend) actualFilter = {...actualFilter, friend: parsed.friend === "null" ? null : parsed.friend === "true" ? true : false}
         dispatch(requestUsers(actualPage, pageSize, actualFilter))
-
     }, [])
 
     useEffect(() => {

@@ -57,7 +57,6 @@ export const getCaptcha = ():ThunkTypes => async (dispatch) => {
     dispatch(actions.setCaptcha(captchaUrl))
 }
 export const login = (email: string, password: string, rememberMe: boolean, captcha: string):ThunkTypes => async (dispatch: any) => {
-
     let loginData = await authAPI.login(email, password, rememberMe, captcha)
         if (loginData.resultCode === ResultCodesEnum.Success){
             dispatch(getUserAuthData())
@@ -67,7 +66,6 @@ export const login = (email: string, password: string, rememberMe: boolean, capt
             const message = loginData.messages.length > 0 ? loginData.messages[0] : "Some error"
             dispatch(stopSubmit("login", {_error: message}))
         }
-
 }
 export const logout = ():ThunkTypes => async (dispatch) => {
    let response = await authAPI.logout()

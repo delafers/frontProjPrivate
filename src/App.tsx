@@ -63,9 +63,6 @@ class App extends React.Component<MapPropsType & DispatchPropsType> {
                                 <Menu.Item key="3">
                                     <NavLink to='/gallery' activeClassName={s.active}>Gallery</NavLink>
                                 </Menu.Item>
-                                <Menu.Item key="4">
-                                    <NavLink to='/packs' activeClassName={s.active}>Packs</NavLink>
-                                </Menu.Item>
                             </SubMenu>
                             <SubMenu key="sub2" icon={<LaptopOutlined />} title="Users">
                                 <Menu.Item key="5">
@@ -124,7 +121,7 @@ let AppContainer = compose<React.ComponentType>(
     connect(mapStateToProps, {initializeApp}))(App)
 
 const LastFrontApp: React.FC = () => {
-    return <BrowserRouter>
+    return <BrowserRouter basename={process.env.PUBLIC_URL}>
         <Provider store={store}>
             <AppContainer/>
         </Provider>
